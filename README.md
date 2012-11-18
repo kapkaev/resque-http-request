@@ -1,4 +1,4 @@
-# Resque::Http::Stats
+# Resque::Http::Request
 
 TODO: Write a gem description
 
@@ -6,7 +6,7 @@ TODO: Write a gem description
 
 Add this line to your application's Gemfile:
 
-    gem 'resque-http-stats'
+    gem 'resque-http-request'
 
 And then execute:
 
@@ -14,7 +14,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install resque-http-stats
+    $ gem install resque-http-request
 
 ## Usage
 
