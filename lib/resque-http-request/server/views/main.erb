@@ -1,4 +1,4 @@
-<% @subtabs = %w( all performed failure ) %>
+<% @subtabs = %w( performed failure ) %>
 <h1>HttpRequests</h1>
 <%unless @data.empty?%>
   <form method="POST" action="<%= u(:http_request_status) %>/clear/all" class='clear-failed'>
@@ -13,30 +13,57 @@
 <%end%>
 
 <p class='intro'>These are recent jobs created with the Resque::Plugins::HttpRequest class</p>
-<table>
-  <tr>
-    <th>class name</th>
-    <th>method</th>
-    <th>status</th>
-    <th>date</th>
-    <th style="width: 770px;">headers</th>
-  </tr>
-  <% unless @data.empty? %>
-    <% @data.each do |status| %>
-      <tr>
-        <td><%= status["name"] %></td>
-        <td><%= status["method"] %></td>
-        <td><%= status["status"] %></td>
-        <td><%#= status["response_headers"]["date"] %></td>
-        <td><%= status["response_headers"] %></td>
-      </tr>
+<% if params[:key] == "performed" %>
+  <table>
+    <tr>
+      <th>class name</th>
+      <th>method</th>
+      <th>status</th>
+      <th>date</th>
+      <th style="width: 770px;">headers</th>
+    </tr>
+    <% unless @data.empty? %>
+      <% @data.each do |status| %>
+        <tr>
+          <td><%= status["name"] %></td>
+          <td><%= status["method"] %></td>
+          <td><%= status["status"] %></td>
+          <td><%= status["response_headers"]["date"] %></td>
+          <td><%= status["response_headers"] %></td>
+        </tr>
+      <% end %>
+    <% else %>
+    <tr>
+      <td colspan="7" class='no-data'>No Statuses right now...</td>
+    </tr>
     <% end %>
-  <% else %>
-  <tr>
-    <td colspan="7" class='no-data'>No Statuses right now...</td>
-  </tr>
-  <% end %>
-</table>
+  </table>
+<% elsif params[:key] == "failure" %>
+  <table>
+    <tr>
+      <th>class name</th>
+      <th>type</th>
+      <th>message</th>
+      <th>date</th>
+      <th style="width: 600px;">backtrace</th>
+    </tr>
+    <% unless @data.empty? %>
+      <% @data.each do |status| %>
+        <tr>
+          <td><%= status["name"] %></td>
+          <td><%= status["exception"]["type"] %></td>
+          <td><%= status["exception"]["message"] %></td>
+          <td><%= status["exception"]["date"] %></td>
+          <td><%= status["exception"]["backtrace"][0..100]+"..." %></td>
+        </tr>
+      <% end %>
+    <% else %>
+    <tr>
+      <td colspan="7" class='no-data'>No Statuses right now...</td>
+    </tr>
+    <% end %>
+  </table>
+<%end%>
 <% unless @data.empty? %>
   <%= partial :next_more, :start => @start, :size => @size %>
 <% end %>

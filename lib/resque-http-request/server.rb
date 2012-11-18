@@ -8,7 +8,7 @@ module Resque
 
     def self.registered(app)
       app.get '/http_request_status' do
-        redirect url_path("/http_request_status/all")
+        redirect url_path("/http_request_status/performed")
       end
 
       app.get "/http_request_status/:key" do
@@ -20,8 +20,6 @@ module Resque
           data(performed_key, @start, @offset)
         when "failure"
           data(failure_key, @start, @offset)
-        else
-          all_data(@start, @offset)
         end
 
         @size = @data.size
@@ -52,14 +50,6 @@ module Resque
 
         def failure_key
           Resque::Plugins::HttpRequestStatus::FAILURE_KEY
-        end
-
-        def all_data(start, offset)
-          offset ||= start+20
-          start ||= 0
-          data = Resque.redis.lrange(failure_key, start, offset) +
-                 Resque.redis.lrange(performed_key, start, offset)
-          data.map{|r| Resque.decode(r)}
         end
 
         def list_count(key)
