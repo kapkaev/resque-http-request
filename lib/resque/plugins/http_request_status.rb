@@ -31,7 +31,7 @@ module Resque
             {}
         end
 
-        keys = [:status, :method ,:response_headers, :exception, :exception_type, :exception_message, :backtrace, :args]
+        keys = [:status, :method ,:response_headers, :exception, :args]
         data.delete_if{|k,v| !keys.include? k}
 
         data.merge!(name: self.name)
